@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+
+    <link rel="stylesheet" href="mainStyles.css">
+    <link href="https://fonts.googleapis.com/css?family=Comfortaa&display=swap" rel="stylesheet">
+
+    <script src="JS/three.min.js"></script>
+    <script src="JS/GLTFLoader.js"></script>
+    <script src="JS/anime.min.js"></script>
+    <script src="JS/gsap.min.js"></script>
+    <script src="JS/require.js"></script>
+    <script src="JS/EffectComposer.js"></script>
+    <script src="JS/CopyShader.js"></script>
+    <script src="JS/RenderPass.js"></script>
+    <script src="JS/ShaderPass.js"></script>
+    <script src="JS/SSAOShader.js"></script>
+    <script src="JS/SSAOPass.js"></script>
+    <script src="JS/SimplexNoise.js"></script>
+    <script src="JS/SSAARenderPass.js"></script>
+    
+
+</head>
+<body>
+    
+    <header>
+        <div class="logo">
+            <a href="index.html"><img class="title" src="images/Title.png" alt="Nvike Nyathi"></a>
+        </div>
+        
+        <div class="navbar">
+            <ul>
+                <li><a href="about.html">About</a></li>
+                <div class="divide"></div>
+                <li><a href="mailto:nvikelo2000@gmail.com">Contact</a></li>
+            </ul>
+        </div>
+
+        <div class="empty"></div>
+    </header>
+
+    <section>
+        <h1>Hello.</h1>
+        <h1>I am</h1>
+        <h1>Nvikelo</h1>
+    </section>
+
+    <section>
+        <!--Middle Section-->
+    </section>
+
+    <section>
+        <h2>Game Developer</h2>
+        <h4>3D Modeler, Programmer</h4>
+        <h5>Web Developer</h5>
+    </section>
+
+    <section>
+        <div class="bothButtons">
+            <button class="button" onclick="plusDivs(-1)">&#10094;</button>
+            <button class="button" onclick="plusDivs(1)">&#10095;</button>
+        </div>
+
+        <p id="mIndex">1/3 Projects</p>
+
+        <h1 id="pTitle">Push</h1>
+        <p id="pInfo">Push is a 2.5D run and gun platformer. The name of the 
+            character on screen is hannible, he is the protaginist of the game. </p>
+
+        <p id="pStatus">
+            Status: ongoing
+        </p>
+        <a href="" id="pLink" class="lMore" ><h4>Learn More</h4></a>
+    </section>
+
+    <section>
+        <a href="comingSoon.html"><img src="Images/Icons/MoreProjects.png" alt=""></a>
+    </section>
+
+    <script>
+
+        var scene = new THREE.Scene();
+
+        var mixer;
+
+        var modelIndex = 0;
+        var lastMIndex;
+
+        var canSwitch = true;
+
+        var camera = new THREE.PerspectiveCamera(75,window.innerWidth/window.innerHeight,0.1,1000);
+        camera.position.z = 2;
+        camera.position.y = 1;
+
+        var renderer = new THREE.WebGLRenderer({antialias: true, alpha: true});
+        renderer.setPixelRatio( window.devicePixelRatio );
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        var raycaster = new THREE.Raycaster();
+        var mouse = new THREE.Vector2();
+
+        var loader = new THREE.GLTFLoader();
+        
+        var models = ['3DModels/Hannible/PushCHP.glb', '3DModels/3DAstroids/3DA4W.glb', '3DModels/Overhaul/Overhaul.glb'];
+
+        var mTitles = ['Push', '3D-SpaceInvaders', 'Overhaul'];
+
+        var mDescriptions = ['Push is a 2.5D run and gun platformer. The name of the character on screen is Hannibal, he is the protagonist of the game.',
+        '3D Space Invaders game I made for practice. I finished it within a day, working for around 12-14 hours.', 
+        'This is a game that I created with 4 developers in 48hours for Global Game Jam 2020. I worked on music, visual effects, animation, some programming, and had a hand in the design. The language used was c#'];
+
+        var mStatus = ['Ongoing', 'Completed', 'Completed']
+        
+        var light = new THREE.AmbientLight(0x35282C, 1);
+        light.position.set(0,0,0);
+        scene.add(light);
+
+        var sun = new THREE.DirectionalLight(0xFFFFE1, 1.5, 1000);
+        sun.position.set(8,4,12);
+        scene.add(sun);
+
+        var rectLight = new THREE.PointLight( 0xBAE1FF, 1, 1000);
+        rectLight.position.set( 0, 0, -5 );
+        scene.add( rectLight )
+
+        updateModel();
+
+        function plusDivs(n) {
+            console.log("Switching Model " + canSwitch);
+            if(!canSwitch)
+                return;
+            
+            lastMIndex = modelIndex;
+            if((modelIndex + n) < 0)
+                modelIndex = 2;
+            else if((modelIndex + n) > 2)
+                modelIndex = 0;
+            else
+		        modelIndex = modelIndex + n;
+                
+            updateModel();
+
+            document.getElementById("mIndex").innerHTML =  (modelIndex+1 + "/3 Projects");
+		}
+
+        function updateModel(){
+            canSwitch = false;
+            if(scene.children[2] != null){
+                var tl = gsap.timeline({onComplete:function() {
+                    scene.remove(scene.children[2]);
+                    canSwitch = true;
+                }});
+                tl.to(scene.children[2].position, {duration: 1,y: -4});
+                tl.to(scene.children[2].rotation, {duration: .75,x: Math.PI*-2}, "=-1");
+            }
+
+            document.getElementById("pTitle").innerHTML = mTitles[modelIndex];
+            document.getElementById("pInfo").innerHTML = mDescriptions[modelIndex];
+            document.getElementById("pStatus").innerHTML = "Status: " + mStatus[modelIndex];
+            document.getElementById("pLink").href = "comingSoon.html";
+
+            // Load a glTF resource
+            loader.load(
+                // resource URL
+                models[modelIndex],
+                // called when the resource is loaded
+                function ( gltf ) {
+
+                    if(gltf.animations[0]){
+                        mixer = new THREE.AnimationMixer( gltf.scene );
+                        var action = mixer.clipAction( gltf.animations[ 0 ] );
+                        action.play();
+                    }
+
+                    scene.add( gltf.scene );
+                    
+                    gltf.scene.rotation.set(-2, 0, 0);
+                    gltf.scene.position.y = -4;
+                    sun.target = gltf.scene;
+
+                    var tl = gsap.timeline();
+                    tl.to(gltf.scene.position, {duration: 1,y: 0});
+                    tl.to(gltf.scene.rotation, {duration: .75,x: Math.PI*0}, "=-.75");
+                    
+                    gltf.animations; // Array<THREE.AnimationClip>
+                    gltf.scene; // THREE.Scene
+                    gltf.scenes; // Array<THREE.Scene>
+                    gltf.cameras; // Array<THREE.Camera>
+                    gltf.asset; // Object
+                },
+                // called while loading is progressing
+                function ( xhr ) {
+
+                    console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
+
+                },
+                // called when loading has errors
+                function ( error ) {
+
+                    console.log( 'An error happened' );
+
+                }
+            );
+        }
+
+        //Shader
+        var composer = new THREE.EffectComposer(renderer);
+
+        //Passes
+        var renderPass = new THREE.RenderPass(scene, camera);
+        composer.addPass(renderPass);
+
+        var ssaoPass = new THREE.SSAOPass(scene, camera, 1920, 1080);
+        ssaoPass.kernelRadius = 13;
+        ssaoPass.minDistance = 0.004;
+        ssaoPass.maxDistance = 0.2;
+        ssaoPass.output = 0;
+        composer.addPass(ssaoPass);
+
+        var ssaaRenderPass = new THREE.SSAARenderPass( scene, camera );
+        ssaaRenderPass.unbiased = true;
+        composer.addPass(ssaaRenderPass);
+
+        renderPass.renderToScreen = true;
+
+        window.addEventListener( 'resize', onWindowResize, false );
+
+        var lastTime = 0;
+
+        function update(time) {
+            var deltaTime = 0;
+            if (lastTime) {
+                deltaTime = (time - lastTime) / 1000;
+            }
+            lastTime = time;
+
+            if( mixer ) mixer.update( deltaTime );
+
+            //renderer.render(scene,camera);
+            composer.render();
+            requestAnimationFrame(update);
+        }
+
+        update();
+
+        function onWindowResize() {
+
+        var width = window.innerWidth;
+        var height = window.innerHeight;
+
+        camera.aspect = width / height;
+        camera.updateProjectionMatrix();
+
+        renderer.setSize( width, height );
+        composer.setSize( width, height );
+
+        }
+        
+    </script>
+</body>
+</html>
