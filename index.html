@@ -205,6 +205,8 @@
 
                 }
             );
+
+            
         }
 
         //Shader
@@ -214,16 +216,19 @@
         var renderPass = new THREE.RenderPass(scene, camera);
         composer.addPass(renderPass);
 
-        var ssaoPass = new THREE.SSAOPass(scene, camera, 1920, 1080);
-        ssaoPass.kernelRadius = 13;
-        ssaoPass.minDistance = 0.004;
-        ssaoPass.maxDistance = 0.2;
-        ssaoPass.output = 0;
-        composer.addPass(ssaoPass);
+        if(!isMobileDevice()){
+            console.log("not on Phone");
+            var ssaoPass = new THREE.SSAOPass(scene, camera, 1920, 1080);
+            ssaoPass.kernelRadius = 13;
+            ssaoPass.minDistance = 0.004;
+            ssaoPass.maxDistance = 0.2;
+            ssaoPass.output = 0;
+            composer.addPass(ssaoPass);
 
-        var ssaaRenderPass = new THREE.SSAARenderPass( scene, camera );
-        ssaaRenderPass.unbiased = true;
-        composer.addPass(ssaaRenderPass);
+            var ssaaRenderPass = new THREE.SSAARenderPass( scene, camera );
+            ssaaRenderPass.unbiased = true;
+            composer.addPass(ssaaRenderPass);
+        }
 
         renderPass.renderToScreen = true;
 
@@ -259,6 +264,10 @@
         composer.setSize( width, height );
 
         }
+
+        function isMobileDevice() {
+            return (typeof window.orientation !== "undefined") || (navigator.userAgent.indexOf('IEMobile') !== -1);
+        };
         
     </script>
 </body>
