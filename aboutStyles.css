@@ -211,7 +211,7 @@ section:nth-of-type(3) {
     
     /* Track */
     ::-webkit-scrollbar-track {
-        background: linear-gradient(to bottom,  #07a2f5 0%,#480078 100%); 
+        background: linear-gradient(to bottom,  #35282C 0%,#120b0d 100%); 
     }
     
     /* Handle */
@@ -221,7 +221,7 @@ section:nth-of-type(3) {
     
     /* Handle on hover */
     ::-webkit-scrollbar-thumb:hover {
-        background: linear-gradient(to bottom,  #07a2f5 0%,#480078 100%);; 
+        background: linear-gradient(to bottom,  #35282C 0%,#120b0d 100%);; 
     }
 
     .navbar li a:hover {
