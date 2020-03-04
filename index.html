@@ -64,7 +64,7 @@
             <button class="button" onclick="plusDivs(1)">&#10095;</button>
         </div>
 
-        <p id="mIndex">1/3 Projects</p>
+        <p id="mIndex">1/4 Projects</p>
 
         <h1 id="pTitle">Push</h1>
         <p id="pInfo">Push is a 2.5D run and gun platformer. The name of the 
@@ -77,7 +77,7 @@
     </section>
 
     <section>
-        <a href="comingSoon.html"><img src="Images/Icons/MoreProjects.png" alt="MoreProjects"></a>
+        <a href="Projects/baseProj.html"><img src="Images/Icons/MoreProjects.png" alt="MoreProjects"></a>
     </section>
 
     <script>
@@ -105,15 +105,18 @@
 
         var loader = new THREE.GLTFLoader();
         
-        var models = ['3DModels/Hannible/PushCHP.glb', '3DModels/3DAstroids/3DA4W.glb', '3DModels/Overhaul/Overhaul.glb'];
+        var models = ['3DModels/Hannible/PushCHP.glb', '3DModels/3DAstroids/3DA4W.glb', '3DModels/Overhaul/Overhaul.glb', '3DModels/ThisSite/ThisSite.glb'];
 
-        var mTitles = ['Push', '3D-SpaceInvaders', 'Overhaul'];
+        var mTitles = ['Push', '3D-SpaceInvaders', 'Overhaul', 'This Website'];
 
         var mDescriptions = ['Push is a 2.5D run and gun platformer. The name of the character on screen is Hannibal, he is the protagonist of the game.',
         '3D Space Invaders game I made for practice. I finished it within a day, working for around 12-14 hours.', 
-        'This is a game that I created with 4 developers in 48hours for Global Game Jam 2020. I worked on music, visual effects, animation, some programming, and had a hand in the design. The language used was c#'];
+        'This is a game that I created with 4 developers in 48hours for Global Game Jam 2020. I worked on music, visual effects, animation, some programming, and had a hand in the design. The language used was c#',
+        'This website was fully made by me.'];
 
-        var mStatus = ['Ongoing', 'Completed', 'Completed']
+        var mStatus = ['Active', 'Completed', 'Completed', 'Active']
+
+        var mHRef = ['Projects/PushProj.html','Projects/3DSIProj.html','Projects/OverhaulProj.html', 'about.html'];
         
         var light = new THREE.AmbientLight(0x35282C, 2.5);
         light.position.set(0,0,0);
@@ -136,15 +139,15 @@
             
             lastMIndex = modelIndex;
             if((modelIndex + n) < 0)
-                modelIndex = 2;
-            else if((modelIndex + n) > 2)
+                modelIndex = 3;
+            else if((modelIndex + n) > 3)
                 modelIndex = 0;
             else
 		        modelIndex = modelIndex + n;
                 
             updateModel();
 
-            document.getElementById("mIndex").innerHTML =  (modelIndex+1 + "/3 Projects");
+            document.getElementById("mIndex").innerHTML =  (modelIndex+1 + "/4 Projects");
 		}
 
         function updateModel(){
@@ -161,7 +164,7 @@
             document.getElementById("pTitle").innerHTML = mTitles[modelIndex];
             document.getElementById("pInfo").innerHTML = mDescriptions[modelIndex];
             document.getElementById("pStatus").innerHTML = "Status: " + mStatus[modelIndex];
-            document.getElementById("pLink").href = "comingSoon.html";
+            document.getElementById("pLink").href = mHRef[modelIndex];
 
             // Load a glTF resource
             loader.load(
